@@ -480,7 +480,7 @@ function M.parse_str(str, filename)
   local mod_return = determine_modvar(str)
 
   --- @type string
-  local module = filename:match('.*/lua/([a-z_][a-z0-9_/]+)%.lua') or filename
+  local module = filename:match('.*/?lua/([a-z_][a-z0-9_/]+)%.lua') or filename
   module = module:gsub('/', '.')
 
   local classvars = {} --- @type table<string,string>

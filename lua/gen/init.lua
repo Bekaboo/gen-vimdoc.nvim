@@ -620,19 +620,19 @@ end
 ---@field funs_txt string
 ---@field doc? string[]
 
----@param filename string
+---@param file string
 ---@param cfg nvim.gen_vimdoc.Config
 ---@param section_docs table<string,nvim.gen_vimdoc.Section>
 ---@param funs_txt string
 ---@return nvim.gen_vimdoc.Section?
-local function make_section(filename, cfg, section_docs, funs_txt)
+local function make_section(file, cfg, section_docs, funs_txt)
   -- filename: e.g., 'autocmd.c'
   -- name: e.g. 'autocmd'
-  local name = filename:match('(.*)%.[a-z]+')
+  local name = vim.fn.fnamemodify(file, ':t:r')
 
   -- Formatted (this is what's going to be written in the vimdoc)
   -- e.g., "Autocmd Functions"
-  local sectname = cfg.section_name and cfg.section_name[filename]
+  local sectname = cfg.section_name and cfg.section_name[file]
     or mktitle(name)
 
   -- section tag: e.g., "*api-autocmd*"
@@ -740,9 +740,7 @@ local function gen_target(cfg)
         funs_txt = classes_txt .. '\n' .. funs_txt
       end
     end
-    -- FIXME: Using f_base will confuse `_meta/protocol.lua` with `protocol.lua`
-    local f_base = vim.fs.basename(f)
-    sections[f_base] = make_section(f_base, cfg, briefs_txt, funs_txt)
+    sections[f] = make_section(f, cfg, briefs_txt, funs_txt)
   end
 
   local first_section_tag = sections[cfg.section_order[1]].help_tag

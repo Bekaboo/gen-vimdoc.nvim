@@ -596,7 +596,7 @@ local function delete_lines_below(doc_file, tokenstr)
     lines[#lines + 1] = line
   end
   if not found then
-    error(fmt('not found: %s in %s', tokenstr, doc_file))
+    return
   end
   lines[#lines] = nil
   local fp = assert(io.open(doc_file, 'w'))

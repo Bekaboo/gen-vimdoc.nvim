@@ -632,8 +632,7 @@ local function make_section(file, cfg, section_docs, funs_txt)
 
   -- Formatted (this is what's going to be written in the vimdoc)
   -- e.g., "Autocmd Functions"
-  local sectname = cfg.section_name and cfg.section_name[file]
-    or mktitle(name)
+  local sectname = cfg.section_name and cfg.section_name[file] or mktitle(name)
 
   -- section tag: e.g., "*api-autocmd*"
   local help_labels = cfg.helptag_fmt(sectname)

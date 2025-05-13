@@ -219,7 +219,14 @@ end
 --- @param text_width integer
 --- @param level integer
 --- @return string[]
-local function render_md(node, start_indent, indent, text_width, level, is_list)
+local function render_md(
+  node,
+  start_indent,
+  indent,
+  text_width,
+  level,
+  is_list
+)
   local parts = {} --- @type string[]
 
   -- For debugging
@@ -258,15 +265,22 @@ local function render_md(node, start_indent, indent, text_width, level, is_list)
       parts[#parts + 1] = M.wrap(text, start_indent, indent, text_width)
     else
       for _, child in ipairs(node) do
-        vim.list_extend(parts, render_md(child, start_indent, indent, text_width, level + 1))
+        vim.list_extend(
+          parts,
+          render_md(child, start_indent, indent, text_width, level + 1)
+        )
       end
     end
   elseif ntype == 'paragraph' then
     local pparts = {}
     for _, child in ipairs(node) do
-      vim.list_extend(pparts, render_md(child, start_indent, indent, text_width, level + 1))
+      vim.list_extend(
+        pparts,
+        render_md(child, start_indent, indent, text_width, level + 1)
+      )
     end
-    parts[#parts + 1] = M.wrap(table.concat(pparts), start_indent, indent, text_width)
+    parts[#parts + 1] =
+      M.wrap(table.concat(pparts), start_indent, indent, text_width)
     parts[#parts + 1] = '\n'
   elseif ntype == 'code_fence_content' then
     local lines = vim.split(node.text:gsub('\n%s*$', ''), '\n')
@@ -302,7 +316,10 @@ local function render_md(node, start_indent, indent, text_width, level, is_list)
     parts[#parts + 1] = '\n'
     for _, child in ipairs(node) do
       if child.type ~= 'info_string' then
-        vim.list_extend(parts, render_md(child, start_indent, indent, text_width, level + 1))
+        vim.list_extend(
+          parts,
+          render_md(child, start_indent, indent, text_width, level + 1)
+        )
       end
     end
     parts[#parts + 1] = '<\n'
@@ -365,7 +382,8 @@ local function align_tags(text_width)
       local tags_str = ' ' .. table.concat(tags, ' ')
       --- @type integer
       local conceal_offset = select(2, tags_str:gsub('%*', '')) - 2
-      local pad = string.rep(' ', text_width - #line - #tags_str + conceal_offset)
+      local pad =
+        string.rep(' ', text_width - #line - #tags_str + conceal_offset)
       return line .. pad .. tags_str
     end
 

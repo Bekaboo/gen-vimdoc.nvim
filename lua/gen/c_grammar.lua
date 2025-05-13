@@ -87,7 +87,8 @@ local function paren(x)
   return P('(') * fill * x * fill * P(')')
 end
 
-local cdoc_comment = P('///') * opt(Ct(Cg(rep(space) * rep(1 - nl), 'comment')))
+local cdoc_comment = P('///')
+  * opt(Ct(Cg(rep(space) * rep(1 - nl), 'comment')))
 
 local braces = P({
   'S',
@@ -231,8 +232,18 @@ local keyset = Ct(
     * Pf(';')
 )
 
-local grammar =
-  Ct(rep1(empty_line + proto + cdoc_comment + comment + preproc + ws + keyset + ignore_line))
+local grammar = Ct(
+  rep1(
+    empty_line
+      + proto
+      + cdoc_comment
+      + comment
+      + preproc
+      + ws
+      + keyset
+      + ignore_line
+  )
+)
 
 if arg[1] == '--test' then
   for i, t in ipairs({

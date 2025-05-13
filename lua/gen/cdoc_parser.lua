@@ -177,7 +177,10 @@ local function process_proto(item, state)
   -- Remove some arguments
   for i = #cur_obj.params, 1, -1 do
     local p = cur_obj.params[i]
-    if p.name == 'channel_id' or vim.tbl_contains({ 'lstate', 'arena', 'error' }, p.type) then
+    if
+      p.name == 'channel_id'
+      or vim.tbl_contains({ 'lstate', 'arena', 'error' }, p.type)
+    then
       table.remove(cur_obj.params, i)
     end
   end

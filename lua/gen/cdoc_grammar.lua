@@ -62,16 +62,28 @@ local v = setmetatable({}, {
   end,
 })
 
-local grammar = P {
+local grammar = P({
   rep1(P('@') * v.ats),
 
-  ats = v.at_param + v.at_return + v.at_deprecated + v.at_see + v.at_brief + v.at_note + v.at_nodoc,
+  ats = v.at_param
+    + v.at_return
+    + v.at_deprecated
+    + v.at_see
+    + v.at_brief
+    + v.at_note
+    + v.at_nodoc,
 
   at_param = Ct(
-    Cg(P('param'), 'kind') * opt(io) * ws * Cg(ident, 'name') * opt(ws * Cg(rep(any), 'desc'))
+    Cg(P('param'), 'kind')
+      * opt(io)
+      * ws
+      * Cg(ident, 'name')
+      * opt(ws * Cg(rep(any), 'desc'))
   ),
 
-  at_return = Ct(Cg(P('return'), 'kind') * opt(S('s')) * opt(ws * Cg(rep(any), 'desc'))),
+  at_return = Ct(
+    Cg(P('return'), 'kind') * opt(S('s')) * opt(ws * Cg(rep(any), 'desc'))
+  ),
 
   at_deprecated = Ct(Cg(P('deprecated'), 'kind')),
 
@@ -82,6 +94,6 @@ local grammar = P {
   at_note = Ct(Cg(P('note'), 'kind') * ws * Cg(rep(any), 'desc')),
 
   at_nodoc = Ct(Cg(P('nodoc'), 'kind')),
-}
+})
 
 return grammar --[[@as nvim.cdoc.grammar]]

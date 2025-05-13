@@ -69,9 +69,18 @@ local luacats_grammar = require('gen.luacats_grammar')
 --- @param line string
 local function use_type_alt(line)
   for _, type in ipairs({ 'table', 'function' }) do
-    line = line:gsub('@param%s+([a-zA-Z_?]+)%s+.*%((' .. type .. ')%)', '@param %1 %2')
-    line = line:gsub('@param%s+([a-zA-Z_?]+)%s+.*%((' .. type .. '|nil)%)', '@param %1 %2')
-    line = line:gsub('@param%s+([a-zA-Z_?]+)%s+.*%((' .. type .. '%?)%)', '@param %1 %2')
+    line = line:gsub(
+      '@param%s+([a-zA-Z_?]+)%s+.*%((' .. type .. ')%)',
+      '@param %1 %2'
+    )
+    line = line:gsub(
+      '@param%s+([a-zA-Z_?]+)%s+.*%((' .. type .. '|nil)%)',
+      '@param %1 %2'
+    )
+    line = line:gsub(
+      '@param%s+([a-zA-Z_?]+)%s+.*%((' .. type .. '%?)%)',
+      '@param %1 %2'
+    )
 
     line = line:gsub('@return%s+.*%((' .. type .. ')%)', '@return %1')
     line = line:gsub('@return%s+.*%((' .. type .. '|nil)%)', '@return %1')
@@ -142,19 +151,24 @@ local function process_doc_line(line, state)
     cur_obj.name = parsed.name
     cur_obj.parent = parsed.parent
     cur_obj.access = parsed.access
-    cur_obj.desc = state.doc_lines and table.concat(state.doc_lines, '\n') or nil
+    cur_obj.desc = state.doc_lines and table.concat(state.doc_lines, '\n')
+      or nil
     state.doc_lines = nil
     cur_obj.fields = {}
   elseif kind == 'field' then
     --- @cast parsed nvim.luacats.Field
-    parsed.desc = parsed.desc or state.doc_lines and table.concat(state.doc_lines, '\n') or nil
+    parsed.desc = parsed.desc
+      or state.doc_lines and table.concat(state.doc_lines, '\n')
+      or nil
     if parsed.desc then
       parsed.desc = vim.trim(parsed.desc)
     end
     table.insert(cur_obj.fields, parsed)
     state.doc_lines = nil
   elseif kind == 'operator' then
-    parsed.desc = parsed.desc or state.doc_lines and table.concat(state.doc_lines, '\n') or nil
+    parsed.desc = parsed.desc
+      or state.doc_lines and table.concat(state.doc_lines, '\n')
+      or nil
     if parsed.desc then
       parsed.desc = vim.trim(parsed.desc)
     end
@@ -276,8 +290,12 @@ local function filter_decl(line)
   -- M.fun = vim._memoize(function(...)
   --   ->
   -- function M.fun(...)
-  line = line:gsub('^local (.+) = memoize%([^,]+, function%((.*)%)$', 'local function %1(%2)')
-  line = line:gsub('^(.+) = memoize%([^,]+, function%((.*)%)$', 'function %1(%2)')
+  line = line:gsub(
+    '^local (.+) = memoize%([^,]+, function%((.*)%)$',
+    'local function %1(%2)'
+  )
+  line =
+    line:gsub('^(.+) = memoize%([^,]+, function%((.*)%)$', 'function %1(%2)')
   return line
 end
 
@@ -455,7 +473,13 @@ end
 local function dump_uncommitted(filename, uncommitted)
   local out_path = 'luacats-uncommited/' .. filename:gsub('/', '%%') .. '.txt'
   if #uncommitted > 0 then
-    print(string.format('Could not commit %d objects in %s', #uncommitted, filename))
+    print(
+      string.format(
+        'Could not commit %d objects in %s',
+        #uncommitted,
+        filename
+      )
+    )
     vim.fn.mkdir(vim.fs.dirname(out_path), 'p')
     local f = assert(io.open(out_path, 'w'))
     for i, x in ipairs(uncommitted) do

@@ -24,3 +24,8 @@ require('gen').run({
   },
 })
 ```
+
+## Examples
+
+Plugin [dropbar.nvim](https://github.com/Bekaboo/dropbar.nvim) use this project
+to [generate vimdoc from lua docstrings](https://github.com/Bekaboo/dropbar.nvim/blob/master/scripts/gen_vimdoc_from_src.lua).
